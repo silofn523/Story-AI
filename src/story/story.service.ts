@@ -22,7 +22,8 @@ export class StoryService {
     const completion = await this.openAi.chat.completions.create({
       model: 'gpt-4',
       messages: [{ role: 'user', content: `${prompt}를 첫 문장으로 시작하는 이야기를 써` }],
-      max_tokens: 500
+      max_tokens: 500,
+      temperature: 100 // 상상력
     })
     return completion.choices[0].message.content
   }
@@ -51,7 +52,7 @@ export class StoryService {
 
   public async generateImage(prompt: string): Promise<string> {
     const response = await this.openAi.images.generate({
-      model:'dall-e-3',
+      model: 'dall-e-3',
       prompt,
       n: 1,
       size: '1024x1024'
@@ -108,7 +109,11 @@ export class StoryService {
   }
 
   public async getOneStory(id: number): Promise<Story> {
-    return await this.story.findOneBy({ id })
+    return await this.story.findOne({
+      where: {
+        id
+      }
+    })
   }
 
   public async findAllStory(): Promise<Story[]> {
